@@ -10,7 +10,7 @@ namespace TP2console
     {
         static void Main(string[] args)
         {
-            Exo2.Exo3Q3();
+            Exo2.Exo3Q5();
         }
 
         public void Tuto()

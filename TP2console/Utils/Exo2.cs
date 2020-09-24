@@ -109,9 +109,53 @@ namespace TP2console.Utils
         {
             var ctx = new FilmsDBContext();
             var film = ctx.Film.Include(a=>a.Avis).Where(f => f.Nom.ToUpper() == "L'ARMEE DES DOUZE SINGES").FirstOrDefault();
-            ctx.Avis.Remove(film.Avis);
-            ctx.Film.Remove(film);
+            ctx.Avis.RemoveRange(film.Avis);
+            ctx.Film.RemoveRange(film);
             ctx.SaveChanges();
+        }
+
+        public static void Exo3Q4()
+        {
+            var ctx = new FilmsDBContext();
+            var film = ctx.Film.Include(a => a.Avis).Where(f => f.Nom.ToUpper() == "PULP FICTION").FirstOrDefault();
+            var user = ctx.Utilisateur.Where(u => u.Login == "Fynn").FirstOrDefault();
+
+            var avis = new Avis()
+            {
+                Avis1 = "Meiller film de tout les temps",
+                Note = 100,
+                FilmNavigation = film,
+                UtilisateurNavigation = user
+            };
+
+            ctx.Avis.Add(avis);
+
+            ctx.SaveChanges();
+        }
+
+        public static void Exo3Q5()
+        {
+            var ctx = new FilmsDBContext();
+          
+            var categorie = ctx.Categorie.Where(c => c.Nom.ToUpper() == "DRAME").FirstOrDefault();
+
+            var bvs = new Film()
+            {
+                CategorieNavigation = categorie,
+                Nom = "Batman v superman",
+                Description = "MARTA"
+            };
+
+            var tdn = new Film()
+            {
+                CategorieNavigation = categorie,
+                Nom = "The dark knight",
+                Description = "why so serious"
+            };
+
+            ctx.Film.AddRange(bvs, tdn);
+            ctx.SaveChanges();
+
         }
     }
 }
