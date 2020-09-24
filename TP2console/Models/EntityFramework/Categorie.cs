@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,9 +9,16 @@ namespace TP2console.Models.EntityFramework
     [Table("categorie")]
     public partial class Categorie
     {
+        private ILazyLoader _lazyLoader;
+         
         public Categorie()
         {
             Film = new HashSet<Film>();
+        }
+
+        public Categorie(ILazyLoader lazyLoader)
+        {
+            _lazyLoader = lazyLoader;
         }
 
         [Key]
@@ -24,6 +32,13 @@ namespace TP2console.Models.EntityFramework
         public string Description { get; set; }
 
         [InverseProperty("CategorieNavigation")]
-        public virtual ICollection<Film> Film { get; set; }
+        private ICollection<Film> film;
+
+        [InverseProperty("CategorieNavigation")]
+        public virtual ICollection<Film> Film
+        {
+            get { return _lazyLoader.Load(this, ref film); }
+            set { film = value; }
+        }
     }
 }
